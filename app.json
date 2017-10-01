@@ -1,8 +1,0 @@
-{
-  "name": "SWE432 Textbook App",
-  "description": "A web application that connects students to assist with exchanging used textbooks.",
-  "repository": "https://github.com/nolan4509/swe432-textbook-app",
-  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
-  "keywords": ["node", "express", "heroku"],
-  "image": "heroku/nodejs"
-}
