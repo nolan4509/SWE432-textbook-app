@@ -10,7 +10,7 @@ Scenarios:
 		-Search for a Course
 			GET /courses/:courseCode/:courseLevel
 		-Retrieve textbook post information
-			GET /courses/:courseID/:postID
+			GET /posts/:postID
 		-Request to purchase textbook
 			GET /courses/:courseID/:postID/purchase (This will be the page that has the 'Send' button to send the seller an email requesting to purchase the textbook)
 
@@ -91,6 +91,8 @@ let testUser = new User('John', 'jhunt11', 'jhunt11@gmu.edu', []);
 let bookPostArray = [];
 bookPostArray[0] = new BookPost(testBook, 123, 'good', testUser, 'Prof. Test', 999999, testCsCourse);
 //end test data
+
+//Search for a course
 app.get('/courses/:courseCode/:courseLevel', function(req, res){
     let courseLevel = Number(req.params.courseLevel);
     let courseCode = String(req.params.courseCode).toLowerCase();
@@ -101,6 +103,7 @@ app.get('/courses/:courseCode/:courseLevel', function(req, res){
     bookPostArray.map(function(course) { //search through bookPostArray for matching course
         if(course.course.name() === courseID){
             retCourses[count] = course;
+            count++;
         }
     });
     if(retCourses.length === 0){
@@ -108,6 +111,27 @@ app.get('/courses/:courseCode/:courseLevel', function(req, res){
         return;
     }
     res.send(retCourses);
+});
+
+app.get('/', function(req, res) {
+    res.send(testCsCourse.name())
+    //res.send("Hello World");
+});
+
+//Retrieve textbook post information
+app.get('/posts/:postID', function(req, res){
+    let postID = Number(req.params.postID);
+    let retPost = null;
+
+    bookPostArray.map(function(post) { //search through bookPostArray for matching course
+        if(post.id === postID){
+            retPost = post;
+            res.send(retPost);
+        }
+    });
+    if(retPost === null){
+        res.send("ID Not Found.");
+    }
 });
 
 app.get('/', function(req, res) {
