@@ -129,17 +129,17 @@ app.get('/posts/:postID', function(req, res){
 });
 
 //Create new textbook post /user/:userID/books/newBook
-app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel', function (req, res) {
+app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price', function (req, res) {
     let userID = String(req.params.userID);
     let isbnNum = Number(req.params.isbnNum);
     let condition = String(req.params.condition);
     let teacher = String(req.params.teacher);
     let courseLevel = Number(req.params.courseLevel);
     let courseCode = String(req.params.courseCode).toLowerCase();
+    let price = Number(req.params.price);
     let courseID = courseCode + courseLevel;
     let courseFound = null;
     let textbook = null;
-    let price = 0;
 
     fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
         .then(function (res) {
@@ -149,22 +149,16 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
             let edition = json.data[0].edition_info;
             let author = json.data[0].author_data[0].name;
             textbook = new Textbook(title, isbnNum, title, author, edition);
-    })
-    fetch(`http://isbndb.com/api/v2/json/10AXC8WX/prices/${isbnNum}`)//fetch pricing info
-        .then(function (res) {
-            return res.json();
-        }).then(function (json) {
-        price = json.data[0].price;
-        bookPostArray.map(function (course) { //search through bookPostArray for matching course
-            if (course.course.name() === courseID) {
-                courseFound = course.course;
-            }
-        })
-        bookPostArray[bookPostArray.length] = new BookPost(textbook, bookPostArray.length + 100, condition, testUser, teacher, price, courseFound);//store new post
-        database.ref('Posts/' + `${bookPostArray.length + 100}`).set(//persist firebase
-            { bookpost: bookPostArray[bookPostArray.length - 1]
-            });
-        res.send(bookPostArray[bookPostArray.length - 1]);
+            bookPostArray.map(function (course) { //search through bookPostArray for matching course
+                if (course.course.name() === courseID) {
+                    courseFound = course.course;
+                }
+            })
+            bookPostArray[bookPostArray.length] = new BookPost(textbook, bookPostArray.length + 100, condition, testUser, teacher, price, courseFound);//store new post
+            database.ref('Posts/' + `${bookPostArray.length + 100}`).set(//persist firebase
+                { bookpost: bookPostArray[bookPostArray.length - 1]
+                });
+            res.send(bookPostArray[bookPostArray.length - 1]);
     });
 });
 
