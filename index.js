@@ -25,6 +25,8 @@ Scenarios:
 			PUT /user/:userID/books/:postID/update
 */
 
+//API Key = 10AXC8WX
+
 class Course {
     constructor(code, level, id) {
         this.code = code.toLowerCase(); //CS, MATH, etc.
@@ -80,9 +82,6 @@ var config = {
 firebase.initializeApp(config);
 
 let database = firebase.database();
-database.ref('users/' + 'Josh').set(
-    { username: 'Josh', email: 'josh@gmail.com'
-    });
 
 //test data
 let testCsCourse = new Course('CS', 101, 0);
@@ -113,17 +112,12 @@ app.get('/courses/:courseCode/:courseLevel', function(req, res){
     res.send(retCourses);
 });
 
-app.get('/', function(req, res) {
-    res.send(testCsCourse.name())
-    //res.send("Hello World");
-});
-
 //Retrieve textbook post information
 app.get('/posts/:postID', function(req, res){
     let postID = Number(req.params.postID);
     let retPost = null;
 
-    bookPostArray.map(function(post) { //search through bookPostArray for matching course
+    bookPostArray.map(function(post) { //search bookPostArray for matching postID
         if(post.id === postID){
             retPost = post;
             res.send(retPost);
@@ -134,9 +128,48 @@ app.get('/posts/:postID', function(req, res){
     }
 });
 
+//Create new textbook post /user/:userID/books/newBook
+app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel', function (req, res) {
+    let userID = String(req.params.userID);
+    let isbnNum = Number(req.params.isbnNum);
+    let condition = String(req.params.condition);
+    let teacher = String(req.params.teacher);
+    let courseLevel = Number(req.params.courseLevel);
+    let courseCode = String(req.params.courseCode).toLowerCase();
+    let courseID = courseCode + courseLevel;
+    let courseFound = null;
+    let textbook = null;
+    let price = 0;
+
+    fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
+        .then(function (res) {
+            return res.json();
+        }).then(function (json) {
+            let title = json.data[0].title;
+            let edition = json.data[0].edition_info;
+            let author = json.data[0].author_data[0].name;
+            textbook = new Textbook(title, isbnNum, title, author, edition);
+    })
+    fetch(`http://isbndb.com/api/v2/json/10AXC8WX/prices/${isbnNum}`)//fetch pricing info
+        .then(function (res) {
+            return res.json();
+        }).then(function (json) {
+        price = json.data[0].price;
+        bookPostArray.map(function (course) { //search through bookPostArray for matching course
+            if (course.course.name() === courseID) {
+                courseFound = course.course;
+            }
+        })
+        bookPostArray[bookPostArray.length] = new BookPost(textbook, bookPostArray.length + 100, condition, testUser, teacher, price, courseFound);//store new post
+        database.ref('Posts/' + `${bookPostArray.length + 100}`).set(//persist firebase
+            { bookpost: bookPostArray[bookPostArray.length - 1]
+            });
+        res.send(bookPostArray[bookPostArray.length - 1]);
+    });
+});
+
 app.get('/', function(req, res) {
-    res.send(testCsCourse.name())
-    //res.send("Hello World");
+    res.send("Hello World");
 });
 
 
