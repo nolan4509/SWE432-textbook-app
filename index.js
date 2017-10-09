@@ -12,7 +12,7 @@ Scenarios:
 		-Retrieve textbook post information
 			GET /posts/:postID
 		-Request to purchase textbook
-			GET /courses/:courseID/:postID/purchase (This will be the page that has the 'Send' button to send the seller an email requesting to purchase the textbook)
+			GET /purchase/:postID (This will be the page that has the 'Send' button to send the seller an email requesting to purchase the textbook)
 
 	(Sellers)
 		-Retrieve all books user is selling
@@ -88,7 +88,7 @@ let testCsCourse = new Course('CS', 101, 0);
 let testBook = new Textbook('test book', 9871234567890, 'titletest', 'yolo', 8);
 let testUser = new User('John', 'jhunt11', 'jhunt11@gmu.edu', []);
 let bookPostArray = [];
-bookPostArray[0] = new BookPost(testBook, 123, 'good', testUser, 'Prof. Test', 999999, testCsCourse);
+bookPostArray[0] = new BookPost(testBook, 100, 'good', testUser, 'Prof. Test', 999999, testCsCourse);
 //end test data
 
 //Search for a course
@@ -154,12 +154,42 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
                     courseFound = course.course;
                 }
             })
-            bookPostArray[bookPostArray.length] = new BookPost(textbook, bookPostArray.length + 100, condition, testUser, teacher, price, courseFound);//store new post
-            database.ref('Posts/' + `${bookPostArray.length + 100}`).set(//persist firebase
+            let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique
+            bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, testUser, teacher, price, courseFound);//store new post
+            database.ref('Posts/' + `${postIndex}`).set(//persist firebase
                 { bookpost: bookPostArray[bookPostArray.length - 1]
                 });
             res.send(bookPostArray[bookPostArray.length - 1]);
+    })
+        .catch(function (err) {
+            if(err.code === 'ENOTFOUND'){//no internet connection
+                console.log('Internet Error: ' + err);
+            }
+            if (err.name === 'TypeError') {//gateway timeout
+                console.log("Type Error, bad data");
+            }
+            else {//flags 404 and any other client error
+                console.log('Error: ' + err.status + ' --- ' + err.statusText);
+            }
+        });
+});
+//-Request to purchase textbook
+//GET /courses/:postID/purchase
+app.get('/purchase/:postID', function(req, res){
+    let postID = Number(req.params.postID);
+
+    let retEmail = null;
+
+    bookPostArray.map(function(post) { //search through bookPostArray for matching course
+        if(post.id === postID){
+            retEmail = post.seller.email;
+        }
     });
+    if(retEmail === null){
+        res.send("No post found.");
+        return;
+    }
+    res.send(retEmail);
 });
 
 app.get('/', function(req, res) {
