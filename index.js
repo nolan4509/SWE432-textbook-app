@@ -20,9 +20,12 @@ Scenarios:
 		-Remove a textbook post for a book that you are selling (Going to require authentication to determine correct user)
 			DELETE /user/:userID/books/:postID/remove
 		Create new textbook post
-			POST /user/:userID/books/newBook
+			POST /user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price
 		Update a textbook post
-			PUT /user/:userID/books/:postID/update
+			PUT /user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price/update/:postID
+	(Both)
+	    -Create new user account
+	        POST /add/user/:userName/:userID/:email
 */
 
 //API Key = 10AXC8WX
@@ -53,7 +56,7 @@ class User {
 		this.name = name;
 		this.id = id;
 		this.email = email;
-		this.bookPosts = bookPosts;
+		this.bookPosts = bookPosts;//store integers of the post IDs they currently own
 	}
 }
 
@@ -89,6 +92,8 @@ let testBook = new Textbook('test book', 9871234567890, 'titletest', 'yolo', 8);
 let testUser = new User('John', 'jhunt11', 'jhunt11@gmu.edu', []);
 let bookPostArray = [];
 bookPostArray[0] = new BookPost(testBook, 100, 'good', testUser, 'Prof. Test', 999999, testCsCourse);
+let userArray = [];
+userArray[0] = testUser;
 //end test data
 
 //Search for a course
@@ -137,9 +142,7 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
     let courseLevel = Number(req.params.courseLevel);
     let courseCode = String(req.params.courseCode).toLowerCase();
     let price = Number(req.params.price);
-    let courseID = courseCode + courseLevel;
-    let courseFound = null;
-    let textbook = null;
+    let seller = null;
 
     fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
         .then(function (res) {
@@ -148,14 +151,20 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
             let title = json.data[0].title;
             let edition = json.data[0].edition_info;
             let author = json.data[0].author_data[0].name;
-            textbook = new Textbook(title, isbnNum, title, author, edition);
-            bookPostArray.map(function (course) { //search through bookPostArray for matching course
-                if (course.course.name() === courseID) {
-                    courseFound = course.course;
+            let textbook = new Textbook(title, isbnNum, title, author, edition);
+            let course = new Course(courseCode, courseLevel, 0);
+            userArray.map(function(user) { //search for user account
+                if(user.id === userID){
+                    seller = user;
                 }
-            })
+            });
+            if(seller === null){
+                res.send("User Not Found.");
+                return;
+            }
             let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique
-            bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, testUser, teacher, price, courseFound);//store new post
+            bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, seller, teacher, price, course);//store new post
+            seller.bookPosts[seller.bookPosts.length] = postIndex;//store in sellers list
             database.ref('Posts/' + `${postIndex}`).set(//persist firebase
                 { bookpost: bookPostArray[bookPostArray.length - 1]
                 });
@@ -190,6 +199,75 @@ app.get('/purchase/:postID', function(req, res){
         return;
     }
     res.send(retEmail);
+});
+//-Create new user account name id email bookpossts
+//POST /add/user/:userName/:userID/:email
+app.post('/add/user/:userName/:userID/:email', function (req, res) {
+    let userID = String(req.params.userID);
+    let userName = String(req.params.userName);
+    let email = String(req.params.email);
+
+    userArray[userArray.length] = new User(userName, userID, email, []);
+    database.ref('Users/' + `${userID}`).set(//store into firebase
+        { userInfo: userArray[userArray.length - 1]
+        });
+    res.send(userArray[userArray.length - 1]);
+});
+
+//Update a textbook post
+//PUT /user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price/update/postID
+app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price/update/:postID', function (req, res) {
+    let userID = String(req.params.userID);
+    let isbnNum = Number(req.params.isbnNum);
+    let condition = String(req.params.condition);
+    let teacher = String(req.params.teacher);
+    let courseLevel = Number(req.params.courseLevel);
+    let courseCode = String(req.params.courseCode).toLowerCase();
+    let price = Number(req.params.price);
+    let postID = Number(req.params.postID);
+    let seller = null;
+    let bookpost = null;
+
+    fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
+        .then(function (res) {
+            return res.json();
+        }).then(function (json) {
+        let title = json.data[0].title;
+        let edition = json.data[0].edition_info;
+        let author = json.data[0].author_data[0].name;
+        let textbook = new Textbook(title, isbnNum, title, author, edition);
+        let course = new Course(courseCode, courseLevel, 0);
+        userArray.map(function(user) { //search for user account
+            if(user.id === userID){
+                seller = user;
+            }
+        });
+        if(seller === null){
+            res.send("User Not Found.");
+            return;
+        }
+        bookPostArray.map(function(post) { //search for user account
+            if(post.id === postID){
+                bookpost = post;
+            }
+        });
+        bookpost = new BookPost(textbook, bookpost.id, condition, seller, teacher, price, course);//store new post
+        database.ref('Posts/' + `${bookpost.id}`).set(//persist firebase
+            { bookpost: bookpost
+            });
+        res.send(bookpost);
+    })
+        .catch(function (err) {
+            if(err.code === 'ENOTFOUND'){//no internet connection
+                console.log('Internet Error: ' + err);
+            }
+            if (err.name === 'TypeError') {//gateway timeout
+                console.log("Type Error, bad data");
+            }
+            else {//flags 404 and any other client error
+                console.log('Error: ' + err.status + ' --- ' + err.statusText);
+            }
+        });
 });
 
 app.get('/', function(req, res) {
