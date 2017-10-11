@@ -84,8 +84,25 @@ var config = {
 };
 firebase.initializeApp(config);
 
-let database = firebase.database();
+let database = firebase.app().database().ref();
+let userDatabase = database.child('Users');
+let bookPostDatabase = database.child('Posts');
 
+function updateUsers(){//load users from firebase to userArray
+    userDatabase.once('value', function (snap) {
+        snap.forEach(function (childSnap) {
+            userArray[userArray.length] = new User(childSnap.val().userinfo.name, childSnap.val().userinfo.id, childSnap.val().userinfo.email, childSnap.val().userinfo.bookPosts)
+        });
+    });
+}
+function updateBookPosts(){//load bookposts from firebase to bookPostArray
+    bookPostDatabase.once('value', function (snap) {
+        snap.forEach(function (childSnap) {
+            bookPostArray[bookPostArray.length] = new BookPost(childSnap.val().bookpost.textbook, childSnap.val().bookpost.id, childSnap.val().bookpost.condition, childSnap.val().bookpost.seller,
+                childSnap.val().bookpost.teacherName, childSnap.val().bookpost.price, childSnap.val().bookpost.course);
+        });
+    });
+}
 //test data
 let testCsCourse = new Course('CS', 101, 0);
 let testBook = new Textbook('test book', 9871234567890, 'titletest', 'yolo', 8);
@@ -95,6 +112,10 @@ bookPostArray[0] = new BookPost(testBook, 100, 'good', testUser, 'Prof. Test', 9
 let userArray = [];
 userArray[0] = testUser;
 //end test data
+
+updateUsers();//loads users from firebase into userArray
+updateBookPosts();//loads users from firebase into userArray
+
 
 //Search for a course
 app.get('/courses/:courseCode/:courseLevel', function(req, res){
@@ -165,11 +186,14 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
             let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique
             bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, seller, teacher, price, course);//store new post
             seller.bookPosts[seller.bookPosts.length] = postIndex;//store in sellers list
-            database.ref('Posts/' + `${postIndex}`).set(//persist firebase
+            database.child('Posts/' + `${postIndex}`).set(//persist firebase
                 { bookpost: bookPostArray[bookPostArray.length - 1]
                 });
-            res.send(bookPostArray[bookPostArray.length - 1]);
-    })
+            database.child('Users/' + `${userID}`).set(//persist firebase
+                { userinfo: seller
+                });
+                res.send(bookPostArray[bookPostArray.length - 1]);
+        })
         .catch(function (err) {
             if(err.code === 'ENOTFOUND'){//no internet connection
                 console.log('Internet Error: ' + err);
@@ -208,8 +232,8 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
     let email = String(req.params.email);
 
     userArray[userArray.length] = new User(userName, userID, email, []);
-    database.ref('Users/' + `${userID}`).set(//store into firebase
-        { userInfo: userArray[userArray.length - 1]
+    database.child('Users/' + `${userID}`).set(//store into firebase
+        { userinfo: userArray[userArray.length - 1]
         });
     res.send(userArray[userArray.length - 1]);
 });
@@ -252,7 +276,7 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             }
         });
         bookpost = new BookPost(textbook, bookpost.id, condition, seller, teacher, price, course);//store new post
-        database.ref('Posts/' + `${bookpost.id}`).set(//persist firebase
+        database.child('Posts/' + `${bookpost.id}`).set(//persist firebase
             { bookpost: bookpost
             });
         res.send(bookpost);
