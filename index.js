@@ -13,7 +13,6 @@ Scenarios:
 			GET /posts/:postID
 		-Request to purchase textbook
 			GET /purchase/:postID (This will be the page that has the 'Send' button to send the seller an email requesting to purchase the textbook)
-
 	(Sellers)
 		-Retrieve all books user is selling
 			GET /user/:userID/books
@@ -37,7 +36,7 @@ class Course {
         this.id = id;
     }
     name() {
-    	return this.code + this.level; //CS101
+        return this.code + this.level; //CS101
     }
 }
 
@@ -52,24 +51,24 @@ class Textbook {
 }
 
 class User {
-	constructor(name, id, email, bookPosts) {
-		this.name = name;
-		this.id = id;
-		this.email = email;
-		this.bookPosts = bookPosts;//store integers of the post IDs they currently own
-	}
+    constructor(name, id, email, bookPosts) {
+        this.name = name;
+        this.id = id;
+        this.email = email;
+        this.bookPosts = bookPosts;//store integers of the post IDs they currently own
+    }
 }
 
 class BookPost {
-	constructor(textbook, id, condition, seller, teacherName, price, course) {
-		this.textbook = textbook;
-		this.id = id;
-		this.condition = condition;
-		this.seller = seller;
-		this.teacherName = teacherName;
-		this.price = price;
-		this.course = course;
-	}
+    constructor(textbook, id, condition, seller, teacherName, price, course) {
+        this.textbook = textbook;
+        this.id = id;
+        this.condition = condition;
+        this.seller = seller;
+        this.teacherName = teacherName;
+        this.price = price;
+        this.course = course;
+    }
 }
 
 const firebase = require("firebase");
@@ -176,16 +175,16 @@ app.get('/purchase/:postID', function(req, res){
 
 //Seller - Retrieve all books a user is selling
 app.get('/user/:userID/books', function(req, res){
-	let userID = String(req.params.userID);
-	let seller = null;
-	userArray.map(function(user) { //search for user account
+    let userID = String(req.params.userID);
+    let seller = null;
+    userArray.map(function(user) { //search for user account
         if(user.id === userID){
-        	seller = user;
+            seller = user;
         }
     });
     if(seller === null){
-    	res.send("User Not Found.");
-       	return;
+        res.send("User Not Found.");
+        return;
     }
     console.log(seller);
     res.send(seller.bookPosts); //will return postID's for all books the user is selling
@@ -193,16 +192,16 @@ app.get('/user/:userID/books', function(req, res){
 
 //Seller - Remove a textbook post for a book that you are selling (Going to require authentication to determine correct user)
 app.delete('/user/:userID/books/:postID/remove', function(req, res){
-	let userID = String(req.params.userID);
-	let postID = Number(req.params.postID);
-	let postToDelete = null;
-	let postIndex = null;
-	for(let i in bookPostArray){ //search bookPostArray for matching postID
-		if(bookPostArray[i].id === postID){
+    let userID = String(req.params.userID);
+    let postID = Number(req.params.postID);
+    let postToDelete = null;
+    let postIndex = null;
+    for(let i in bookPostArray){ //search bookPostArray for matching postID
+        if(bookPostArray[i].id === postID){
             postToDelete = bookPostArray[i];
             postIndex = i;
         }
-	}
+    }
     if(postToDelete === null){
         res.send("Bookpost Not Found.");
         return;
@@ -228,38 +227,38 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
         .then(function (res) {
             return res.json();
         }).then(function (json) {
-            console.log(json);
-            let title = json.data[0].title;
-            let edition = json.data[0].\n" +
-        "            });edition_info;
-            let author = json.data[0].author_data[0].name;
-            let textbook = new Textbook(title, isbnNum, title, author, edition);
-            let course = new Course(courseCode, courseLevel, 0);
-            userArray.map(function(user) { //search for user account
-                if(user.id === userID){
-                    seller = user;
-                }
-            if(seller === null){
-                res.send("User Not Found.");
-                return;
+        let title = json.data[0].title;
+        let edition = json.data[0].edition_info;
+        let author = json.data[0].author_data[0].name;
+        let textbook = new Textbook(title, isbnNum, title, author, edition);
+        let course = new Course(courseCode, courseLevel, 0);
+        userArray.map(function(user) { //search for user account
+            if(user.id === userID){
+                seller = user;
             }
-            let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique *** - 1 then + 1?
-            bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, seller, teacher, price, course);//store new post
-            seller.bookPosts[seller.bookPosts.length] = postIndex;//store in sellers list
-            database.child('Posts/' + `${postIndex}`).set(//persist firebase
-                { bookpost: bookPostArray[bookPostArray.length - 1]
-                });
-            database.child('Users/' + `${userID}`).set(//persist firebase
-                { userinfo: seller
-                });
-                res.send(bookPostArray[bookPostArray.length - 1]);
-        })
+        });
+        if(seller === null){
+            res.send("User Not Found.");
+            return;
+        }
+        let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique *** - 1 then + 1?
+        bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, seller, teacher, price, course);//store new post
+        seller.bookPosts[seller.bookPosts.length] = postIndex;//store in sellers list
+        database.child('Posts/' + `${postIndex}`).set(//persist firebase
+            { bookpost: bookPostArray[bookPostArray.length - 1]
+            });
+        database.child('Users/' + `${userID}`).set(//persist firebase
+            { userinfo: seller
+            });
+        res.send(bookPostArray[bookPostArray.length - 1]);
+    })
         .catch(function (err) {
             if(err.code === 'ENOTFOUND'){//no internet connection
                 console.log('Internet Error: ' + err);
             }
             if (err.name === 'TypeError') {//gateway timeout
                 console.log("Type Error, bad data");
+                res.send("Book not Found.");
             }
             else {//flags 404 and any other client error
                 console.log('Error: ' + err.status + ' --- ' + err.statusText);
@@ -315,6 +314,7 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             }
             if (err.name === 'TypeError') {//gateway timeout
                 console.log("Type Error, bad data");
+                res.send("Book not Found.");
             }
             else {//flags 404 and any other client error
                 console.log('Error: ' + err.status + ' --- ' + err.statusText);
