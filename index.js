@@ -227,8 +227,10 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
         .then(function (res) {
             return res.json();
         }).then(function (json) {
+            console.log(json);
             let title = json.data[0].title;
-            let edition = json.data[0].edition_info;
+            let edition = json.data[0].\n" +
+        "            });edition_info;
             let author = json.data[0].author_data[0].name;
             let textbook = new Textbook(title, isbnNum, title, author, edition);
             let course = new Course(courseCode, courseLevel, 0);
@@ -236,7 +238,6 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
                 if(user.id === userID){
                     seller = user;
                 }
-            });
             if(seller === null){
                 res.send("User Not Found.");
                 return;
