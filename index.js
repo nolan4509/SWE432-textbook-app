@@ -178,7 +178,6 @@ app.get('/purchase/:postID', function(req, res){
 app.get('/user/:userID/books', function(req, res){
 	let userID = String(req.params.userID);
 	let seller = null;
-
 	userArray.map(function(user) { //search for user account
         if(user.id === userID){
         	seller = user;
@@ -198,7 +197,6 @@ app.delete('/user/:userID/books/:postID/remove', function(req, res){
 	let postID = Number(req.params.postID);
 	let postToDelete = null;
 	let postIndex = null;
-	console.log(bookPostArray[0]);
 	for(let i in bookPostArray){ //search bookPostArray for matching postID
 		if(bookPostArray[i].id === postID){
             postToDelete = bookPostArray[i];
