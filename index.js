@@ -95,7 +95,7 @@ function updateUsers(){//load users from firebase to userArray
         });
     });
 }
-function updateBookPosts(){//load bookposts from firebase to bookPostArray
+function updateBookPosts(){//load bookposts from firebase into bookPostArray
     bookPostDatabase.once('value', function (snap) {
         snap.forEach(function (childSnap) {
             bookPostArray[bookPostArray.length] = new BookPost(childSnap.val().bookpost.textbook, childSnap.val().bookpost.id, childSnap.val().bookpost.condition, childSnap.val().bookpost.seller,
@@ -103,6 +103,7 @@ function updateBookPosts(){//load bookposts from firebase to bookPostArray
         });
     });
 }
+
 //test data
 let testCsCourse = new Course('CS', 101, 0);
 let testBook = new Textbook('test book', 9871234567890, 'titletest', 'yolo', 8);
@@ -114,10 +115,10 @@ userArray[0] = testUser;
 //end test data
 
 updateUsers();//loads users from firebase into userArray
-updateBookPosts();//loads users from firebase into userArray
+updateBookPosts();//loads bookposts from firebase into bookPostArray
 
 
-//Search for a course
+//Buyer - Search for a course
 app.get('/courses/:courseCode/:courseLevel', function(req, res){
     let courseLevel = Number(req.params.courseLevel);
     let courseCode = String(req.params.courseCode).toLowerCase();
@@ -138,7 +139,7 @@ app.get('/courses/:courseCode/:courseLevel', function(req, res){
     res.send(retCourses);
 });
 
-//Retrieve textbook post information
+//Buyer - Retrieve textbook post information
 app.get('/posts/:postID', function(req, res){
     let postID = Number(req.params.postID);
     let retPost = null;
@@ -154,7 +155,64 @@ app.get('/posts/:postID', function(req, res){
     }
 });
 
-//Create new textbook post /user/:userID/books/newBook
+//Buyer - Request to purchase textbook
+//GET /courses/:postID/purchase
+app.get('/purchase/:postID', function(req, res){
+    let postID = Number(req.params.postID);
+
+    let retEmail = null;
+
+    bookPostArray.map(function(post) { //search through bookPostArray for matching course
+        if(post.id === postID){
+            retEmail = post.seller.email;
+        }
+    });
+    if(retEmail === null){
+        res.send("No post found.");
+        return;
+    }
+    res.send(retEmail);
+});
+
+//Seller - Retrieve all books a user is selling
+app.get('/user/:userID/books', function(req, res){
+	let userID = String(req.params.userID);
+	let seller = null;
+
+	userArray.map(function(user) { //search for user account
+        if(user.id === userID){
+        	seller = user;
+        }
+    });
+    if(seller === null){
+    	res.send("User Not Found.");
+       	return;
+    }
+    console.log(seller);
+    res.send(seller.bookPosts); //will return postID's for all books the user is selling
+});
+
+//Seller - Remove a textbook post for a book that you are selling (Going to require authentication to determine correct user)
+app.delete('/user/:userID/books/:postID/remove', function(req, res){
+	let userID = String(req.params.userID);
+	let postID = Number(req.params.postID);
+	let postToDelete = null;
+
+	bookPostArray.map(function(post) { //search bookPostArray for matching postID
+        if(post.id === postID){
+            postToDelete = post;
+        }
+    });
+    if(postToDelete === null){
+        res.send("Bookpost Not Found.");
+        return;
+    }
+
+    database.child('Posts/' + `${postID}`).remove();
+
+});
+
+//Seller - Create new textbook post /user/:userID/books/newBook
 app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price', function (req, res) {
     let userID = String(req.params.userID);
     let isbnNum = Number(req.params.isbnNum);
@@ -183,7 +241,7 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
                 res.send("User Not Found.");
                 return;
             }
-            let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique
+            let postIndex = bookPostArray[bookPostArray.length - 1].id + 1;//add 1 to most recent post so all postIDs are unique *** - 1 then + 1?
             bookPostArray[bookPostArray.length] = new BookPost(textbook, postIndex, condition, seller, teacher, price, course);//store new post
             seller.bookPosts[seller.bookPosts.length] = postIndex;//store in sellers list
             database.child('Posts/' + `${postIndex}`).set(//persist firebase
@@ -206,40 +264,8 @@ app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:
             }
         });
 });
-//-Request to purchase textbook
-//GET /courses/:postID/purchase
-app.get('/purchase/:postID', function(req, res){
-    let postID = Number(req.params.postID);
 
-    let retEmail = null;
-
-    bookPostArray.map(function(post) { //search through bookPostArray for matching course
-        if(post.id === postID){
-            retEmail = post.seller.email;
-        }
-    });
-    if(retEmail === null){
-        res.send("No post found.");
-        return;
-    }
-    res.send(retEmail);
-});
-//-Create new user account name id email bookpossts
-//POST /add/user/:userName/:userID/:email
-app.post('/add/user/:userName/:userID/:email', function (req, res) {
-    let userID = String(req.params.userID);
-    let userName = String(req.params.userName);
-    let email = String(req.params.email);
-
-    userArray[userArray.length] = new User(userName, userID, email, []);
-    database.child('Users/' + `${userID}`).set(//store into firebase
-        { userinfo: userArray[userArray.length - 1]
-        });
-    res.send(userArray[userArray.length - 1]);
-});
-
-//Update a textbook post
-//PUT /user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price/update/postID
+//Seller - Update a textbook post
 app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price/update/:postID', function (req, res) {
     let userID = String(req.params.userID);
     let isbnNum = Number(req.params.isbnNum);
@@ -270,7 +296,7 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             res.send("User Not Found.");
             return;
         }
-        bookPostArray.map(function(post) { //search for user account
+        bookPostArray.map(function(post) { //search for bookpost **WHAT IF POST DNE
             if(post.id === postID){
                 bookpost = post;
             }
@@ -293,6 +319,20 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             }
         });
 });
+
+//Both - Create new user account name id email bookpossts
+app.post('/add/user/:userName/:userID/:email', function (req, res) {
+    let userID = String(req.params.userID);
+    let userName = String(req.params.userName);
+    let email = String(req.params.email);
+
+    userArray[userArray.length] = new User(userName, userID, email, []);
+    database.child('Users/' + `${userID}`).set(//store into firebase
+        { userinfo: userArray[userArray.length - 1]
+        });
+    res.send(userArray[userArray.length - 1]);
+});
+
 
 app.get('/', function(req, res) {
     res.send("Hello World");
