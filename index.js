@@ -197,19 +197,22 @@ app.delete('/user/:userID/books/:postID/remove', function(req, res){
 	let userID = String(req.params.userID);
 	let postID = Number(req.params.postID);
 	let postToDelete = null;
-
-	bookPostArray.map(function(post) { //search bookPostArray for matching postID
-        if(post.id === postID){
-            postToDelete = post;
+	let postIndex = null;
+	console.log(bookPostArray[0]);
+	for(let i in bookPostArray){ //search bookPostArray for matching postID
+		if(bookPostArray[i].id === postID){
+            postToDelete = bookPostArray[i];
+            postIndex = i;
         }
-    });
-    if(postToDelete === null){
+	}
+    if(!postToDelete){
         res.send("Bookpost Not Found.");
         return;
     }
 
+    bookPostArray.splice(postIndex, 1);
     database.child('Posts/' + `${postID}`).remove();
-
+    res.send("Done");
 });
 
 //Seller - Create new textbook post /user/:userID/books/newBook
