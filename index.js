@@ -205,7 +205,7 @@ app.delete('/user/:userID/books/:postID/remove', function(req, res){
             postIndex = i;
         }
 	}
-    if(!postToDelete){
+    if(postToDelete === null){
         res.send("Bookpost Not Found.");
         return;
     }
