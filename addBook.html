@@ -6,6 +6,69 @@
 	<title>Add Book</title>
 </head>
 <body>
+	<h1>Add Book</h1>
+	<div id="newBookForm">
+		<div id="isbnLookup"> <!-- this is the call to isbndb.com to try and fill out the fields in the book info form -->
+			<form action="/" method="post">
+				<label for="isbnField">Know the ISBN? </label>
+				<input id="isbnField" type="text" placeholder="ex. '1234567890'">
+				<button id="searchForIsbn">Search</button>
+			</form>
+		</div>
+		<br>
+		<br>
 
+
+		<div id="bookInfoForm">
+			<h3>New Book:</h3>
+			<form action="/sellerHub" method="post">
+				<div>
+					<label for="titleField">*Title: </label>
+					<input id="titleField" type="text" required>
+				</div>
+
+				<div>
+					<label for="authorField">*Author: </label>
+					<input id="authorField" type="text" required>
+				</div>
+
+				<div>
+					<label for="editionField">*Edition: </label>
+					<input id="editionField" type="text" placeholder="ex. '5th'" required>
+				</div>
+
+				<div>
+					<label for="publisherField">Publisher: </label>
+					<input id="publisherField" type="text">
+				</div>
+
+				<div>
+					<label for="copyrightField">Copyright: </label>
+					<input id="copyrightField" type="number">
+				</div>
+
+				<div>
+					<label for="commentsField">Comments: </label>
+					<textarea id="commentsField" rows="5" cols="25"></textarea>
+				</div>
+
+				<div>
+					<label for="courseField">*Course: </label>
+					<input id="courseField" type="text" placeholder="ex. 'CS100'" required>
+				</div>
+
+				<div>
+					<label for="conditionField">*Condition: </label>
+					<input id="conditionField" type="text" placeholder="ex. 'Great'" required>
+				</div>
+
+				<div>
+					<label for="priceField">*Price: $</label>
+					<input id="priceField" type="number" placeholder="ex. '30.50'" required>
+				</div>
+				<button id="postBookButton">Post Book</button>
+			</form>
+		</div>
+	</div>
 </body>
 </html>

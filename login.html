@@ -7,10 +7,22 @@
 </head>
 <body>
 	<h1>Sign In</h1>
-		<form action="/sign-in-url" method="post">
-			<input type="text" placeholder="Enter your Email"> <!--placeholder will allow us to have some text inside the actual input box-->
-			<input type="password" placeholder="Enter your password">
-			<button>Login</button> <!--OR <input type="submit"> -->
+	<div id="loginForm">
+		<form action="/home" method="get">
+			<div>
+				<label for="email">Email: </label>
+				<input id="email" type="email" placeholder="Enter your Email">
+			</div>
+			<br>
+
+			<div>
+				<label for="password">Password: </label>
+				<input id="password" type="password" placeholder="Enter your password">
+			</div>
+			<br>
+			
+			<button id="loginButton">Login</button>
 		</form>
+	</div>
 </body>
 </html>
