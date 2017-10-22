@@ -7,15 +7,18 @@
 	<link rel = "stylesheet" type = "text/css" href = "style.css">
 </head>
 <body>
-	<h1>Add Book</h1>
-	<div id="newBookForm">
-		<div id="isbnLookup"> <!-- this is the call to isbndb.com to try and fill out the fields in the book info form -->
-			<form action="/" method="post">
-				<label for="isbnField">Know the ISBN? </label>
-				<input pattern="[0-9{13}]" id="isbnField" type="text" placeholder="ex. '1234567890'">
-				<button id="searchForIsbn">Search</button>
-			</form>
-		</div>
+	<header>
+		<h1>Add Book</h1>
+		<div id="newBookForm">
+			<div id="isbnLookup"> <!-- this is the call to isbndb.com to try and fill out the fields in the book info form -->
+				<form action="/" method="post">
+					<label for="isbnField">Know the ISBN? </label>
+					<input pattern="[0-9{13}]" id="isbnField" type="text" placeholder="ex. '1234567890'">
+					<button id="searchForIsbn">Search</button>
+				</form>
+			</div>
+			</div>
+	</header>
 		<br>
 		<br>
 
