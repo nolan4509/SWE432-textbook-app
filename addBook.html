@@ -12,7 +12,7 @@
 		<div id="isbnLookup"> <!-- this is the call to isbndb.com to try and fill out the fields in the book info form -->
 			<form action="/" method="post">
 				<label for="isbnField">Know the ISBN? </label>
-				<input id="isbnField" type="text" placeholder="ex. '1234567890'">
+				<input pattern="[0-9{13}]" id="isbnField" type="text" placeholder="ex. '1234567890'">
 				<button id="searchForIsbn">Search</button>
 			</form>
 		</div>
@@ -25,27 +25,27 @@
 			<form action="/sellerHub" method="post">
 				<div>
 					<label for="titleField">*Title: </label>
-					<input id="titleField" type="text" required>
+					<input pattern="[A-Za-z0-9]" id="titleField" type="text" required>
 				</div>
 
 				<div>
 					<label for="authorField">*Author: </label>
-					<input id="authorField" type="text" required>
+					<input pattern="[A-Za-z]" id="authorField" type="text" required>
 				</div>
 
 				<div>
 					<label for="editionField">*Edition: </label>
-					<input id="editionField" type="text" placeholder="ex. '5th'" required>
+					<input pattern="[A-Za-z0-9]" id="editionField" type="text" placeholder="ex. '5th'" required>
 				</div>
 
 				<div>
 					<label for="publisherField">Publisher: </label>
-					<input id="publisherField" type="text">
+					<input pattern="[A-Za-z0-9]" id="publisherField" type="text">
 				</div>
 
 				<div>
 					<label for="copyrightField">Copyright: </label>
-					<input id="copyrightField" type="number">
+					<input pattern="[A-Za-z0-9]" id="copyrightField" type="number">
 				</div>
 
 				<div>
@@ -55,17 +55,17 @@
 
 				<div>
 					<label for="courseField">*Course: </label>
-					<input id="courseField" type="text" placeholder="ex. 'CS100'" required>
+					<input pattern="[A-Za-z0-9]" id="courseField" type="text" placeholder="ex. 'CS100'" required>
 				</div>
 
 				<div>
 					<label for="conditionField">*Condition: </label>
-					<input id="conditionField" type="text" placeholder="ex. 'Great'" required>
+					<input pattern="[A-Za-z]" id="conditionField" type="text" placeholder="ex. 'Great'" required>
 				</div>
 
 				<div>
 					<label for="priceField">*Price: $</label>
-					<input id="priceField" type="number" placeholder="ex. '30.50'" required>
+					<input pattern="[0-9.0-9{2}]" id="priceField" type="number" placeholder="ex. '30.50'" required>
 				</div>
 				<button id="postBookButton">Post Book</button>
 			</form>
