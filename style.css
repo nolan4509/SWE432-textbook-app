@@ -1,1 +1,22 @@
-//CSS For Textbook App
+/*CSS For Textbook App*/
+body {
+    background: #7c1180;
+    color: #12c031
+}
+a:link {
+    color: #ff8080
+}
+a:visited {
+    color: #806c79
+}
+#bookInfoForm {
+    text-align: left;
+    color: black;
+    padding: 20px;
+    border: 20px dotted #ffffff
+}
+h1>a {
+    color: antiquewhite;
+    transition: width 2s, height 2s;
+    margin: 10px 10px 10px 10px;
+}
