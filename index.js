@@ -337,9 +337,13 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
 
 
 app.get('/', function(req, res) {
-    res.send("Hello World");
+    //res.send("Hello World");
+    res.sendfile('public/login.html')
 });
 
+app.use(express.static('public'));
+
+app.use('/static', express.static('public'));
 
 app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
