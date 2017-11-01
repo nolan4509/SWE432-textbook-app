@@ -1,8 +1,8 @@
-let express = require('express');
-let app = express();
+const express = require('express');
+const path = require('path');
+const app = express();
 let fetch = require('node-fetch');
 
-app.set('port', (process.env.PORT || 5000));
 
 /*
 Scenarios:
@@ -336,15 +336,28 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
 });
 
 
-app.get('/', function(req, res) {
+//app.get('/', function(req, res) {
     //res.send("Hello World");
-    res.sendfile('public/login.html')
+    //res.sendfile('public/login.html')
+    //console.log('express');
+//});
+
+//app.use(express.static('public'));
+
+//app.use('/static', express.static('public'));
+
+app.use(express.static(path.join(__dirname, 'react/client/public')));
+
+
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/react/client/public/index.html'));
 });
 
-app.use(express.static('public'));
 
-app.use('/static', express.static('public'));
 
-app.listen(app.get('port'), function() {
-    console.log('Node app is running on port', app.get('port'));
-});
+const port = process.env.PORT || 5000;
+app.listen(port);
+console.log(`Node app is running on port ${port}`);
