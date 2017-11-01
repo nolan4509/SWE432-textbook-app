@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import './style.css'
-
+/*
 const App = () => (
     <div>
         <Main />
     </div>
-)
+)*/
 
 class App extends Component {
   // Initialize state
