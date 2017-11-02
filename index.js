@@ -336,11 +336,11 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
 });
 
 
-//app.get('/', function(req, res) {
+app.get('/', function(req, res) {
     //res.send("Hello World");
-    //res.sendfile('public/login.html')
+    res.sendfile('public/login.html')
     //console.log('express');
-//});
+});
 
 //app.use(express.static('public'));
 
@@ -352,9 +352,9 @@ app.use(express.static(path.join(__dirname, 'react/client/public')));
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/react/client/public/index.html'));
-});
+//app.get('*', (req, res) => {
+//  res.sendFile(path.join(__dirname + '/react/client/public/index.html'));
+//});
 
 
 

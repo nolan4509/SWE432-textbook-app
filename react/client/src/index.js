@@ -5,6 +5,6 @@ import App from './App';
 //This is wehre we will initialize the app and call ReactDOM.render, so we want this at the top level.
 
 ReactDOM.render(
-    <Api />, 
+    <App />, 
     document.getElementById('root')
 );

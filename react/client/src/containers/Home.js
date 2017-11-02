@@ -2,6 +2,40 @@ import React, { Component } from 'react';
 import './style.css';
 
 class Home extends Component {
+
+    constructor() {
+        super();
+        this.state = { //set initial state
+            value: '',
+        };
+        this.searchForCourseChange = this.searchForCourseChange.bind(this);
+        this.searchForCourseSubmit = this.searchForCourseSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        let courseName = document.getElementById('courseSearch');
+
+        fetch('/courses/:courseCode/:courseLevel') //fetch + api call
+        .then(results => {
+            return results.json(); //results - usually json
+            })
+
+            this.setState({value: results}); //set the state with this.setState
+            console.log("state", this.state.value); 
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+    }
+
+    searchForCourseSubmit(event){
+        alert('submitted' + this.state.value)
+    }
+
+    searchForCourseChange(event){
+        this.setState({value: event.target.value});
+    }
+
     render() {
         return (
             <div>
@@ -17,18 +51,13 @@ class Home extends Component {
                 <br/>
                 {this.props.children}
                 <div id="searchForCourseForm">
-                    <form action="/courseHub" method="get">
+                    <form onSubmit={this.searchForCourse}>
                         {/* <h1>Search For Course:</h1> */}
                         <label htmlFor="courseSearch">Search For Course:</label> <br/>
-                        <input pattern="[A-Za-z0-9]" id="courseSearch" type="text" placeholder="ex. 'CS100'"/>
+                        <input pattern="[A-Za-z0-9]" id="courseSearch" type="text" placeholder="ex. 'CS100'" value={this.state.value}/>
                     </form>
                 </div>
                 <br/>
-                <p>NAV LINKS</p>
-                <nav>
-                    <li><Link to="/sellerHub">My Books Page</Link></li>
-                    <li><Link to="/courseHub">Search Courses</Link></li>
-                </nav>
             </div>
         );
     }
