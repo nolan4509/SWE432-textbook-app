@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './style.css';
+import { Link } from 'react-router-dom'
+import '../style.css';
 
 class SellerHub extends Component {
     render() {

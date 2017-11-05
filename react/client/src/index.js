@@ -1,10 +1,10 @@
 import React from 'react'
 import { render } from 'react-dom'
-import App from './App';
+import Main from './containers/routes'
+import { BrowserRouter } from 'react-router-dom'
 
-//This is wehre we will initialize the app and call ReactDOM.render, so we want this at the top level.
-
-ReactDOM.render(
-    <App />, 
-    document.getElementById('root')
-);
+render((
+    <BrowserRouter>
+        <Main />
+    </BrowserRouter>
+), document.getElementById('root'));

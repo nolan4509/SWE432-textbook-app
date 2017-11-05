@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './style.css';
+import { Link } from 'react-router-dom'
+import '../style.css';
 
 class AddBook extends Component {
     render() {
@@ -15,7 +16,7 @@ class AddBook extends Component {
                             id="isbnLookup"> {/* this is the call to isbndb.com to try and fill out the fields in the book info form */}
                             <form action="/" method="post">
                                 <label htmlFor="isbnField">Know the ISBN? </label>
-                                <input pattern="[0-9{13}]" id="isbnField" type="text" placeholder="ex. '1234567890'"/>
+                                <input pattern="[0-9]{13}" id="isbnField" type="text" placeholder="ex. '1234567890'"/>
                                 <button id="searchForIsbn">Search</button>
                             </form>
                         </div>
@@ -63,7 +64,7 @@ class AddBook extends Component {
                         </div>
                         <div>
                             <label htmlFor="priceField">*Price: $</label>
-                            <input pattern="[0-9.0-9{2}]" id="priceField" type="number" placeholder="ex. '30.50'"
+                            <input pattern="[0-9]+.[0-9]{2}" id="priceField" type="number" placeholder="ex. '30.50'"
                                    required/>
                         </div>
                         <button id="postBookButton">Post Book</button>

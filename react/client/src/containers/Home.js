@@ -1,41 +1,21 @@
 import React, { Component } from 'react';
-import './style.css';
+import '../style.css';
 
 class Home extends Component {
-
-    constructor() {
-        super();
-        this.state = { //set initial state
-            value: '',
-        };
-        this.searchForCourseChange = this.searchForCourseChange.bind(this);
-        this.searchForCourseSubmit = this.searchForCourseSubmit.bind(this);
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.state = {course: ''}
     }
-
-    componentDidMount() {
-        let courseName = document.getElementById('courseSearch');
-
-        fetch('/courses/:courseCode/:courseLevel') //fetch + api call
-        .then(results => {
-            return results.json(); //results - usually json
-            })
-
-            this.setState({value: results}); //set the state with this.setState
-            console.log("state", this.state.value); 
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
+    sellerHubClick = () => {
+        this.props.history.push("/sellerHub")
     }
-
-    searchForCourseSubmit(event){
-        alert('submitted' + this.state.value)
+    courseHubClick = () => {
+        this.props.history.push("/courseHub")
     }
-
-    searchForCourseChange(event){
-        this.setState({value: event.target.value});
+    handleChange(event) {
+        this.setState({course: event.target.value})
     }
-
     render() {
         return (
             <div>
@@ -45,19 +25,26 @@ class Home extends Component {
                 <header>
                     <h1 className="big">Home</h1>
                     <div id="myBooksButton">
-                        <button>My Books</button>
+                        <button onClick={this.sellerHubClick}>
+                            My Books
+                        </button>
+                        <button onClick={this.courseHubClick}>
+                            Search Courses
+                        </button>
                     </div>
                 </header>
                 <br/>
-                {this.props.children}
-                <div id="searchForCourseForm">
-                    <form onSubmit={this.searchForCourse}>
-                        {/* <h1>Search For Course:</h1> */}
+                { /*doesnt work like it should, but not needed, on hold for now
+                    <div id="searchForCourseForm">
+                    <form action="/courseHub" method="get">
+                        {/* <h1>Search For Course:</h1> }
                         <label htmlFor="courseSearch">Search For Course:</label> <br/>
-                        <input pattern="[A-Za-z0-9]" id="courseSearch" type="text" placeholder="ex. 'CS100'" value={this.state.value}/>
+                        <input pattern="[A-Z]{1,4}+[0-9]{3,4}]" id="courseSearch" type="text" placeholder="ex. 'CS100'"
+                               value={this.state.course} onChange={this.handleChange.bind(this)}/>
                     </form>
-                </div>
+                </div>*/}
                 <br/>
+
             </div>
         );
     }
