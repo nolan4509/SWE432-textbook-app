@@ -96,9 +96,9 @@ class CourseHub extends Component {
                 </header>
                 <div id="searchForNewCourse">
                     <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="newCourseSearch"><strong>Search for New Course: </strong></label>
-                    <input id="courseSearch" type="text" placeholder="ex. 'CS100'"
-                           value={this.state.course} onChange={this.handleChange}/>
+                        <label htmlFor="newCourseSearch"><strong>Search for New Course: </strong></label>
+                        <input id="courseSearch" type="text" placeholder="ex. 'CS100'"
+                               value={this.state.course} onChange={this.handleChange}/>
                     </form>
                 </div>
                 <div id="courseBooksTable">
