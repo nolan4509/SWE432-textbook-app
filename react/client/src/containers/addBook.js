@@ -5,7 +5,7 @@ import '../style.css';
 class AddBook extends Component {
     constructor(props) {
         super(props)
-        this.handleSubmitBook = this.handleSubmitBook.bind(this)
+        //this.handleSubmitBook = this.handleSubmitBook.bind(this)
         this.handleIsbnLookup = this.handleIsbnLookup.bind(this)
         this.handleChangeIsbn = this.handleChangeIsbn.bind(this)
         this.handleChangeTitle = this.handleChangeTitle.bind(this)
@@ -51,15 +51,6 @@ class AddBook extends Component {
         }).then(alert(`New data sent to server.`))
             .catch((ex) => {
             console.log('parsing failed', ex)
-        })
-    }
-
-    handleSubmitBook(event) {
-        event.preventDefault()
-        this.setState({
-            
-
-
         })
     }
 
@@ -225,7 +216,7 @@ class AddBook extends Component {
                 <br/>
                 <p>NAV LINKS</p>
                 <nav>
-                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/home'>Home</Link></li>
                     <li><Link to='/sellerHub'>My Books Page</Link></li>
                 </nav>
             </div>

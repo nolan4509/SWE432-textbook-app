@@ -196,7 +196,7 @@ class SellerHub extends Component {
                 <br/>
                 <p>NAV LINKS</p>
                 <nav>
-                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/home'>Home</Link></li>
                     <li><Link to='/addBook'>Add Books Page</Link></li>
                 </nav>
             </div>

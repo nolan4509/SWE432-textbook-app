@@ -9,11 +9,11 @@ import Login from './login'
 const Main = () => (
     <main>
         <Switch>
-            <Route exact path='/' component={Home}/>
+            <Route exact path='/' component={Login}/>
             <Route path='/sellerHub' component={SellerHub}/>
             <Route path='/addBook' component={AddBook}/>
             <Route path='/courseHub' component={CourseHub}/>
-            <Route path='/login' component={Login}/>
+            <Route path='/home' component={Home}/>
         </Switch>
     </main>
 )

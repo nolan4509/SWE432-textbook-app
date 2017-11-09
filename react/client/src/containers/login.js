@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom'
 import '../style.css';
 
 class Login extends Component {
+    constructor(props) {
+        super(props)
+
+    }
+
+
+
     render() {
         return (
             <div>
@@ -30,7 +37,7 @@ class Login extends Component {
                 <br/>
                 <p>NAV LINKS</p>
                 <nav>
-                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/home'>Home</Link></li>
                 </nav>
             </div>
         );
