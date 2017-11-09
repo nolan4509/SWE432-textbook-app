@@ -336,11 +336,11 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
 });
 
 
-app.get('/', function(req, res) {
+//app.get('/', function(req, res) {
     //res.send("Hello World");
-    res.sendfile('public/login.html')
+//    res.sendfile('public/login.html')
     //console.log('express');
-});
+//});
 
 //app.use(express.static('public'));
 
