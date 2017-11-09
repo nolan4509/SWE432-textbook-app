@@ -346,7 +346,7 @@ app.post('/add/user/:userName/:userID/:email', function (req, res) {
 
 //app.use('/static', express.static('public'));
 
-app.use(express.static(path.join(__dirname, 'react/client/public')));
+app.use(express.static(path.join(__dirname, 'react/client/build')));
 
 
 
