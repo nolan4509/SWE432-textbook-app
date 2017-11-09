@@ -31,10 +31,10 @@ class SellerHub extends Component {
     homeClick = () => {
         this.props.history.push("/")
     }
-    addBookClick = () => {
+    addBookClick = () => { // New Book
         this.props.history.push("/addBook")
     }
-    editClick = () => {
+    editClick = () => { // Edit Info
         fetch(`/user/${this.state.userID}/books/newBook/${this.state.isbn}/${this.state.condition}/${this.state.teacher}/${this.state.courseCode}/${this.state.courseLevel}/${this.state.price}/update/${this.state.postID}`, {
             method: 'put',
             headers: {
@@ -135,7 +135,8 @@ class SellerHub extends Component {
             courseCode: this.state.course.substring(0,2),
             courseLevel: this.state.course.substring(2,5)
         })
-    }handleChangePrice(event) {
+    }
+    handleChangePrice(event) {
         this.setState({
             price : event.target.value
         })
