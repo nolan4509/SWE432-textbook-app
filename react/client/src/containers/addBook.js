@@ -34,7 +34,7 @@ class AddBook extends Component {
     }
 
     homeClick = () => {
-        this.props.history.push("/")
+        this.props.history.push("/home")
     }
 
     sellerHubClick = () => { // New Book
@@ -42,6 +42,7 @@ class AddBook extends Component {
     }
 
     postBook = () => {
+        console.log(this.state.courseLevel)
         fetch(`/user/${this.state.userID}/books/newBook/${this.state.isbn}/${this.state.condition}/${this.state.teacher}/${this.state.courseCode}/${this.state.courseLevel}/${this.state.price}`, {
             method: 'post',
             headers: {
@@ -52,6 +53,7 @@ class AddBook extends Component {
             .catch((ex) => {
             console.log('parsing failed', ex)
         })
+        this.props.history.push("/sellerHub")
     }
 
     handleIsbnLookup(event) {
@@ -106,7 +108,7 @@ class AddBook extends Component {
         this.setState({
             course : event.target.value,
             courseCode: this.state.course.substring(0,2),
-            courseLevel: this.state.course.substring(2,5)
+            courseLevel: this.state.course.substr(-3)
         })
     }
 

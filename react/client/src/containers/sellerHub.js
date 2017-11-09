@@ -29,7 +29,7 @@ class SellerHub extends Component {
     }
 
     homeClick = () => {
-        this.props.history.push("/")
+        this.props.history.push("/home")
     }
     addBookClick = () => { // New Book
         this.props.history.push("/addBook")

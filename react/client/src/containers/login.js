@@ -15,7 +15,7 @@ class Login extends Component {
     }
 
     homeClick = () => {
-        this.props.history.push("/")
+        this.props.history.push("/home")
     }
 
     login = () => {
@@ -30,6 +30,8 @@ class Login extends Component {
             .catch((ex) => {
                 console.log('parsing failed', ex)
             })
+
+        this.props.history.push("/home")
     }
 
     handleChangeEmail(event) {

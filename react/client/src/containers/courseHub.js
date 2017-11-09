@@ -23,7 +23,7 @@ class CourseHub extends Component {
     }
 
     homeClick = () => {
-        this.props.history.push("/")
+        this.props.history.push("/home")
     }
     sellerClick = () => {
         fetch(`/purchase/${this.state.id}`)

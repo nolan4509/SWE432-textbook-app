@@ -212,7 +212,7 @@ app.delete('/user/:userID/books/:postID/remove', function(req, res){
     res.send("Done");
 });
 
-//Seller - Create new textbook post /user/:userID/books/newBook
+//Seller - Create new textbook post with valid ISBN
 app.post('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:courseLevel/:price', function (req, res) {
     let userID = String(req.params.userID);
     let isbnNum = Number(req.params.isbnNum);
