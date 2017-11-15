@@ -35,7 +35,7 @@ class Course {
         this.level = level; //101 , 102, etc.
         this.id = id;
     }
-    name() {
+    courseName() {
         return this.code + this.level; //CS101
     }
 }
@@ -121,13 +121,12 @@ updateBookPosts();//loads bookposts from firebase into bookPostArray
 app.get('/courses/:courseCode/:courseLevel', function(req, res){
     let courseLevel = Number(req.params.courseLevel);
     let courseCode = String(req.params.courseCode).toLowerCase();
-    let courseID = courseCode + courseLevel;
     let retCourses = [];
     let count = 0;
 
-    bookPostArray.map(function(course) { //search through bookPostArray for matching course
-        if(course.course.name() === courseID){
-            retCourses[count] = course;
+    bookPostArray.map(BP => { //search through bookPostArray for matching course
+        if(BP.course.code === courseCode && BP.course.level === courseLevel){
+            retCourses[count] = BP;
             count++;
         }
     });
@@ -135,7 +134,7 @@ app.get('/courses/:courseCode/:courseLevel', function(req, res){
         res.send("No books found");
         return;
     }
-    res.send(retCourses);
+    res.send(JSON.stringify(retCourses));
 });
 
 //Buyer - Retrieve textbook post information
@@ -146,7 +145,7 @@ app.get('/posts/:postID', function(req, res){
     bookPostArray.map(function(post) { //search bookPostArray for matching postID
         if(post.id === postID){
             retPost = post;
-            res.send(retPost);
+            res.send(JSON.stringify(retPost));
         }
     });
     if(retPost === null){
@@ -170,13 +169,14 @@ app.get('/purchase/:postID', function(req, res){
         res.send("No post found.");
         return;
     }
-    res.send(retEmail);
+    res.send(JSON.stringify(retEmail));
 });
 
 //Seller - Retrieve all books a user is selling
 app.get('/user/:userID/books', function(req, res){
     let userID = String(req.params.userID);
     let seller = null;
+    let retPost = null;
     userArray.map(function(user) { //search for user account
         if(user.id === userID){
             seller = user;
@@ -186,13 +186,20 @@ app.get('/user/:userID/books', function(req, res){
         res.send("User Not Found.");
         return;
     }
-    console.log(seller);
-    res.send(seller.bookPosts); //will return postID's for all books the user is selling
+    let postID = seller.bookPosts[1];
+    bookPostArray.map(function(post) { //search bookPostArray for matching postID
+        if(post.id === postID){
+            retPost = post;
+            res.send(JSON.stringify(retPost));
+        }
+    });
+    if(retPost === null){
+        res.send("ID Not Found.");
+    }
 });
 
 //Seller - Remove a textbook post for a book that you are selling (Going to require authentication to determine correct user)
-app.delete('/user/:userID/books/:postID/remove', function(req, res){
-    let userID = String(req.params.userID);
+app.delete('/user/books/:postID/remove', function(req, res){
     let postID = Number(req.params.postID);
     let postToDelete = null;
     let postIndex = null;
