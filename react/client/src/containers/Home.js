@@ -7,10 +7,10 @@ class Home extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.state = {course: ''}
     }
-    sellerHubClick = () => {
+    sellerHubClick = () => { // My Books
         this.props.history.push("/sellerHub")
     }
-    courseHubClick = () => {
+    courseHubClick = () => { // Search Courses
         this.props.history.push("/courseHub")
     }
     handleChange(event) {

@@ -23,7 +23,7 @@ class CourseHub extends Component {
     }
 
     homeClick = () => {
-        this.props.history.push("/")
+        this.props.history.push("/home")
     }
     sellerClick = () => {
         fetch(`/purchase/${this.state.id}`)
@@ -133,7 +133,7 @@ class CourseHub extends Component {
                 <br/>
                 <p>NAV LINKS</p>
                 <nav>
-                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/home'>Home</Link></li>
                     <li><Link to='/emailSeller'>Email Seller Page</Link></li>
                 </nav>
             </div>
