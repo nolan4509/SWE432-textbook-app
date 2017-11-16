@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
+import * as Mousetrap from "mousetrap";
 
 class AddBook extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class AddBook extends Component {
         this.handleChangeTeacher = this.handleChangeTeacher.bind(this)
         this.handleChangeCondition = this.handleChangeCondition.bind(this)
         this.handleChangePrice = this.handleChangePrice.bind(this)
+        this.wipeFields = this.wipeFields.bind(this)
         this.state = {
             isbn: '',
             title: '',
@@ -49,7 +51,7 @@ class AddBook extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`New data sent to server.`))
+        }).then(alert(`Post successfully created`))
             .catch((ex) => {
             console.log('parsing failed', ex)
         })
@@ -129,7 +131,24 @@ class AddBook extends Component {
             price : event.target.value
         })
     }
-
+    componentDidMount() {
+        Mousetrap.bind(['shift+c shift+l'], this.wipeFields);
+    }
+    wipeFields(){
+        this.setState({
+            isbn: '',
+            title: '',
+            author: '',
+            edition: '',
+            publisher: '',
+            copyright: '',
+            comments: '',
+            course: '',
+            condition: '',
+            price: '',
+            userID: ''
+        })
+    }
 
 
 

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
+import * as Mousetrap from "mousetrap";
 
 class Login extends Component {
     constructor(props) {
         super(props)
         this.handleChangeEmail = this.handleChangeEmail.bind(this)
         this.handleChangeName = this.handleChangeName.bind(this)
+        this.wipeFields = this.wipeFields.bind(this)
         this.state = {
             userID: '',
             userName: '',
@@ -26,7 +28,7 @@ class Login extends Component {
                 'Accept': 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(alert('Post request sent to server.'))
+        }).then(alert('Welcome.'))
             .catch((ex) => {
                 console.log('parsing failed', ex)
             })
@@ -44,6 +46,16 @@ class Login extends Component {
     handleChangeName(event) {
         this.setState({
             userName : event.target.value
+        })
+    }
+    componentDidMount() {
+        Mousetrap.bind(['shift+c shift+l'], this.wipeFields);
+    }
+    wipeFields(){
+        this.setState({
+            userName: '',
+            email: '',
+            userID: ''
         })
     }
 

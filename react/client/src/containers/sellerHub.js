@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
+import * as Mousetrap from "mousetrap";
 
 class SellerHub extends Component {
     constructor(props) {
@@ -11,6 +12,7 @@ class SellerHub extends Component {
         this.handleChangeAuthor = this.handleChangeAuthor.bind(this)
         this.handleChangeCourse = this.handleChangeCourse.bind(this)
         this.handleChangePrice = this.handleChangePrice.bind(this)
+        this.wipeFields = this.wipeFields.bind(this)
         this.state = {
             course: '',
             courseCode: '',
@@ -41,7 +43,7 @@ class SellerHub extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`Updated data sent to server.`))
+        }).then(alert(`Your post has been saved.`))
             .catch((ex) => {
             console.log('parsing failed', ex)
         })
@@ -54,7 +56,7 @@ class SellerHub extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`Delete request sent to server.`))
+        }).then(alert(`Your post has been deleted.`))
             .then(
                 this.setState({
                     courseCode: '',
@@ -139,6 +141,24 @@ class SellerHub extends Component {
     handleChangePrice(event) {
         this.setState({
             price : event.target.value
+        })
+    }
+    componentDidMount() {
+        Mousetrap.bind(['shift+c shift+l'], this.wipeFields);
+    }
+    wipeFields(){
+        this.setState({
+            courseCode: '',
+            courseLevel: '',
+            author: '',
+            bookName: '',
+            isbn: '',
+            condition: '',
+            price: '',
+            postID: '',
+            teacher: '',
+            course: '',
+            userID: ''
         })
     }
     render() {

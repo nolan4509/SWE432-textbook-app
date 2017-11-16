@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
+import * as Mousetrap from "mousetrap";
 
 class CourseHub extends Component {
     constructor(props) {
         super(props)
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.wipeFields = this.wipeFields.bind(this)
         this.state = {
             course: '',
             courseCode: '',
@@ -80,6 +82,23 @@ class CourseHub extends Component {
             course: event.target.value,
             courseCode: this.state.course.substring(0,2),
             courseLevel: this.state.course.substring(2,5)
+        })
+    }
+    componentDidMount() {
+        Mousetrap.bind(['shift+c shift+l'], this.wipeFields);
+    }
+    wipeFields(){
+        this.setState({
+            course : '',
+            courseLevel : '',
+            courseCode : '',
+            author : '',
+            bookName : 'No Books',
+            edition : '',
+            isbn : '',
+            condition : '',
+            price : '',
+            id : ''
         })
     }
     render() {
