@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
 import * as Mousetrap from "mousetrap";
+import Spinner from '../components/Spinner';
+import Loading from 'react-loading-spinner';
 
 class CourseHub extends Component {
     constructor(props) {
@@ -20,7 +22,9 @@ class CourseHub extends Component {
             condition: '',
             price: '',
             email: '',
-            id: ''
+            id: '',
+            isLoading: false,
+            loadingMessage: 'Searching...'
         }
     }
 
@@ -45,6 +49,7 @@ class CourseHub extends Component {
 
     handleSubmit(event) {
         this.setState({
+            isLoading: true,
             courseCode: this.state.course.substring(0,2),
             courseLevel: this.state.course.substring(2,5)
         })
@@ -74,14 +79,15 @@ class CourseHub extends Component {
                 })
             })
         }
-        event.preventDefault()
+        event.preventDefault()    
     }
 
     handleChange(event) {
         this.setState({
             course: event.target.value,
             courseCode: this.state.course.substring(0,2),
-            courseLevel: this.state.course.substring(2,5)
+            courseLevel: this.state.course.substring(2,5),
+            isLoading: false
         })
     }
     componentDidMount() {
@@ -101,6 +107,7 @@ class CourseHub extends Component {
             id : ''
         })
     }
+    //Currently not printing multiple books, just the 1st one
     render() {
         return (
             <div>
@@ -118,6 +125,10 @@ class CourseHub extends Component {
                         <label htmlFor="newCourseSearch"><strong>Search for New Course: </strong></label>
                         <input id="courseSearch" type="text" placeholder="ex. 'CS100'"
                                value={this.state.course} onChange={this.handleChange}/>
+                        <button id="searchForCourseButton" type="submit" onClick={this.handleSubmit}>Search</button>
+                        <Loading isLoading={this.state.isLoading} spinner={Spinner}>{this.state.isLoading ? (
+                            this.state.loadingMessage ) : null } 
+                            </Loading>
                     </form>
                 </div>
                 <div id="courseBooksTable">

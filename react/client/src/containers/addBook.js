@@ -29,6 +29,9 @@ class AddBook extends Component {
             copyright: '',
             comments: '',
             course: '',
+            courseLevel: '',
+            courseCode: '',
+            teacher: '',
             condition: '',
             price: '',
             userID: 'jhunt11'
@@ -44,8 +47,10 @@ class AddBook extends Component {
     }
 
     postBook = () => {
-        console.log(this.state.courseLevel)
-        fetch(`/user/${this.state.userID}/books/newBook/${this.state.isbn}/${this.state.condition}/${this.state.teacher}/${this.state.courseCode}/${this.state.courseLevel}/${this.state.price}`, {
+        console.log('courseCode = ' + this.state.courseCode)
+        console.log('courseLevel = ' + this.state.courseLevel)
+        console.log('course = ' + this.state.course)
+        fetch(`/user/${this.state.userID}/books/newBook/${this.state.isbn}/${this.state.condition}/${this.state.teacher}/${this.state.courseCode}/${this.state.course.substr(-3)}/${this.state.price}`, {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -109,8 +114,9 @@ class AddBook extends Component {
     handleChangeCourse(event) {
         this.setState({
             course : event.target.value,
-            courseCode: this.state.course.substring(0,2),
-            courseLevel: this.state.course.substr(-3)
+            courseLevel: this.state.course.substr(-3), 
+            courseCode: this.state.course.substring(0,2)
+            
         })
     }
 
@@ -144,6 +150,9 @@ class AddBook extends Component {
             copyright: '',
             comments: '',
             course: '',
+            courseLevel: '',
+            courseCode: '',
+            teacher: '',
             condition: '',
             price: '',
             userID: ''
@@ -155,46 +164,47 @@ class AddBook extends Component {
     render() {
         return (
             <div>
-                {/* New Book */}
+                {/* New Book*/ }
                 <meta charSet="utf-8"/>
                 <title>Add Book</title>
                 <header>
                     <h1>Add Book</h1>
-                    <div id="newBookForm">
-                        <div
-                            id="isbnLookup"> {/* this is the call to isbndb.com to try and fill out the fields in the book info form */}
-                            <form onSubmit={this.handleIsbnLookup}>
-                                <label htmlFor="isbnField">Know the ISBN? (Dont use this right now lol) </label>
-                                <input id="isbnField" type="text" placeholder="ex. '1234567890'"/>
-                                <button id="searchForIsbn">Search</button>
-                            </form>
-                        </div>
+                    <div id="isbnLookup"> {/* this is the call to isbndb.com to try and fill out the fields in the book info form */}
+                        <form id="isbnLookupForm" onSubmit={this.handleIsbnLookup}>
+                            <label htmlFor="isbnField">Know the ISBN? (Dont use this right now lol) </label>
+                            <input id="isbnField" type="text" placeholder="ex. '1234567890'"/>
+                            <button id="searchForIsbn" form="isbnLookupForm" type="submit">Search</button>
+                        </form>
                     </div>
                 </header>
                 <br/>
                 <br/>
-                <div id="bookInfoForm">
+                <div id="bookInfo">
                     <h3>New Book:</h3>
-                    <form onSubmit={this.postBook}>
+                    <form id="bookInfoForm" onSubmit={this.postBook}>
                         <div>
                             <label htmlFor="isbnField">*Isbn: </label>
                             <input id="isbnField" type="text" required placeholder="ex. '1234567890'"
-                                value={this.state.isbn} onChange={this.handleChangeIsbn}/>
+                                value={this.state.isbn} onChange={this.handleChangeIsbn}
+                                pattern="[0-9]{13}"/>
                         </div>
                         <div>
                             <label htmlFor="titleField">*Title: </label>
                             <input id="titleField" type="text" required
-                                value={this.state.title} onChange={this.handleChangeTitle}/>
+                                value={this.state.title} onChange={this.handleChangeTitle}
+                                pattern="[A-Za-z0-9\s]{0,}"/>
                         </div>
                         <div>
                             <label htmlFor="authorField">*Author: </label>
                             <input id="authorField" type="text" required
-                                value={this.state.author} onChange={this.handleChangeAuthor}/>
+                                value={this.state.author} onChange={this.handleChangeAuthor}
+                                pattern="[A-Za-z\s]{0,}"/>
                         </div>
                         <div>
                             <label htmlFor="editionField">*Edition: </label>
                             <input id="editionField" type="text" required placeholder="ex. '5th'"
-                                value={this.state.edition} onChange={this.handleChangeEdition}/>
+                                value={this.state.edition} onChange={this.handleChangeEdition}
+                                pattern="\d{0,}[A-Za-z]{2}"/>
                         </div>
                         <div>
                             <label htmlFor="publisherField">Publisher: </label>
@@ -204,7 +214,8 @@ class AddBook extends Component {
                         <div>
                             <label htmlFor="copyrightField">Copyright: </label>
                             <input id="copyrightField" type="number" 
-                                value={this.state.copyright} onChange={this.handleChangeCopyright}/>
+                                value={this.state.copyright} onChange={this.handleChangeCopyright}
+                                pattern="\d{4}"/>
                         </div>
                         <div>
                             <label htmlFor="commentsField">Comments: </label>
@@ -214,7 +225,8 @@ class AddBook extends Component {
                         <div>
                             <label htmlFor="courseField">*Course: </label>
                             <input id="courseField" type="text" required placeholder="ex. 'CS100'"
-                                value={this.state.course} onChange={this.handleChangeCourse}/>
+                                value={this.state.course} onChange={this.handleChangeCourse}
+                                pattern="[A-Za-z]{2}\d{3}"/>
                         </div>
                         <div>
                             <label htmlFor="teacherField">*Teacher: </label>
@@ -229,17 +241,19 @@ class AddBook extends Component {
                         <div>
                             <label htmlFor="priceField">*Price: $</label>
                             <input id="priceField" type="number" required placeholder="ex. '30.50'"
-                                   value={this.state.price} onChange={this.handleChangePrice}/>
+                                   value={this.state.price} onChange={this.handleChangePrice}
+                                   pattern="\d{0,}(\.\d{1,2})"/>
                         </div>
-                        <button id="postBookButton">Post Book</button>
+                        <button id="postBookButton" form="bookInfoForm" type="submit">Post Book</button>
                     </form>
                 </div>
-                <br/>
-                <p>NAV LINKS</p>
-                <nav>
-                    <li><Link to='/home'>Home</Link></li>
-                    <li><Link to='/sellerHub'>My Books Page</Link></li>
-                </nav>
+                <div>
+                    <p>NAV LINKS</p>
+                    <nav>
+                        <li><Link to='/home'>Home</Link></li>
+                        <li><Link to='/sellerHub'>My Books Page</Link></li>
+                    </nav>
+                </div>
             </div>
         );
     }
