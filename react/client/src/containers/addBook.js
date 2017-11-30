@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, Prompt } from 'react-router-dom'
 import '../style.css';
 import * as Mousetrap from "mousetrap";
 
@@ -21,6 +21,7 @@ class AddBook extends Component {
         this.handleChangePrice = this.handleChangePrice.bind(this)
         this.wipeFields = this.wipeFields.bind(this)
         this.state = {
+            complete: false,
             isbn: '',
             title: '',
             author: '',
@@ -47,6 +48,11 @@ class AddBook extends Component {
     }
 
     postBook = () => {
+        this.preventDefault()
+        this.target.reset()
+        this.setState({
+            complete: false
+        })
         console.log('courseCode = ' + this.state.courseCode)
         console.log('courseLevel = ' + this.state.courseLevel)
         console.log('course = ' + this.state.course)
@@ -134,7 +140,8 @@ class AddBook extends Component {
 
     handleChangePrice(event) {
         this.setState({
-            price : event.target.value
+            price : event.target.value,
+            complete : event.target.value > 0
         })
     }
     componentDidMount() {
@@ -162,6 +169,9 @@ class AddBook extends Component {
 
 
     render() {
+
+        const {complete} = this.state
+
         return (
             <div>
                 {/* New Book*/ }
@@ -182,6 +192,12 @@ class AddBook extends Component {
                 <div id="bookInfo">
                     <h3>New Book:</h3>
                     <form id="bookInfoForm" onSubmit={this.postBook}>
+                        <Prompt
+                            when={!complete}
+                            message={location => (
+                            `Are you sure you want to go to ${location.pathname} before finishing your book post?`
+                            )}
+                        />
                         <div>
                             <label htmlFor="isbnField">*Isbn: </label>
                             <input id="isbnField" type="text" required placeholder="ex. '1234567890'"

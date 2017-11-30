@@ -117,7 +117,7 @@ class CourseHub extends Component {
                 <header>
                     <h1>Course Home</h1>
                     <div id="topCourseHubButtons">
-                        <button onClick={this.homeClick} id="backHomeButton">Back Home</button>
+                        <button onClick={this.homeClick} id="backHomeButton" className="homeButtons">Back Home</button>
                     </div>
                 </header>
                 <div id="searchForNewCourse">

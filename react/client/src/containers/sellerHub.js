@@ -170,11 +170,10 @@ class SellerHub extends Component {
                 <header>
                     <h1>My Books</h1>
                     <div id="topSellerHubButtons">
-                        <button onClick={this.homeClick} id="returnHomeButton">Back Home</button>
+                        <button onClick={this.homeClick} id="returnHomeButton" className="homeButtons">Back Home</button>
                         <button onClick={this.addBookClick} id="newBookButton">New Book</button>
                     </div>
                 </header>
-                <br/>
                 <div id="pendingBooksTable">
                     <h3>Books I'm Selling:</h3>
                     <div id="userName">
