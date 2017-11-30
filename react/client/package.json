@@ -5,7 +5,9 @@
   "dependencies": {
     "mousetrap": "^1.6.1",
     "react": "latest",
+    "react-confirm-alert": "^1.0.8",
     "react-dom": "^16.0.0",
+    "react-hover": "^1.3.2",
     "react-loading-spinner": "^1.0.12",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",

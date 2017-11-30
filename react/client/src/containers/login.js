@@ -12,7 +12,8 @@ class Login extends Component {
         this.state = {
             userID: '',
             userName: '',
-            email: ''
+            email: '',
+            submissionStatus: ''
         }
     }
 
@@ -28,7 +29,10 @@ class Login extends Component {
                 'Accept': 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(alert('Welcome.'))
+        }).then(
+            this.setState({
+                submissionStatus: `Welcome`
+            }))
             .catch((ex) => {
                 console.log('parsing failed', ex)
             })
@@ -55,7 +59,8 @@ class Login extends Component {
         this.setState({
             userName: '',
             email: '',
-            userID: ''
+            userID: '',
+            submissionStatus: ''
         })
     }
 
@@ -88,6 +93,7 @@ class Login extends Component {
                         <br/>
                         <button id="loginButton">Login</button>
                     </form>
+                    <h3>{this.state.submissionStatus}</h3>
                 </div>
                 <br/>
                 <p>NAV LINKS</p>

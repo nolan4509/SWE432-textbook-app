@@ -13,6 +13,9 @@ class Home extends Component {
     courseHubClick = () => { // Search Courses
         this.props.history.push("/courseHub")
     }
+    addBookClick = () => { // Add books
+        this.props.history.push("/addBook")
+    }
     handleChange(event) {
         this.setState({course: event.target.value})
     }
@@ -27,9 +30,12 @@ class Home extends Component {
                     <div id="myBooksButton">
                         <button onClick={this.sellerHubClick}>
                             My Books
-                        </button>
+                        </button><br></br>
                         <button onClick={this.courseHubClick}>
                             Search Courses
+                        </button><br></br>
+                        <button onClick={this.addBookClick}>
+                            Add Books
                         </button>
                     </div>
                 </header>

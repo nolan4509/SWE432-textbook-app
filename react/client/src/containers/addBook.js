@@ -35,7 +35,8 @@ class AddBook extends Component {
             teacher: '',
             condition: '',
             price: '',
-            userID: 'jhunt11'
+            userID: 'jhunt11',
+            submissionStatus:  ''
         }
     }
 
@@ -62,7 +63,9 @@ class AddBook extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`Post successfully created`))
+        }).then(this.setState({
+            submissionStatus: `Post successfully created`
+        }))
             .catch((ex) => {
             console.log('parsing failed', ex)
         })
@@ -162,7 +165,8 @@ class AddBook extends Component {
             teacher: '',
             condition: '',
             price: '',
-            userID: ''
+            userID: '',
+            submissionStatus: ''
         })
     }
 
@@ -261,6 +265,7 @@ class AddBook extends Component {
                                    pattern="\d{0,}(\.\d{1,2})"/>
                         </div>
                         <button id="postBookButton" form="bookInfoForm" type="submit">Post Book</button>
+                        <h3>{this.state.submissionStatus}</h3>
                     </form>
                 </div>
                 <div>

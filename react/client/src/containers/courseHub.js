@@ -4,6 +4,8 @@ import '../style.css';
 import * as Mousetrap from "mousetrap";
 import Spinner from '../components/Spinner';
 import Loading from 'react-loading-spinner';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 class CourseHub extends Component {
     constructor(props) {
@@ -24,9 +26,21 @@ class CourseHub extends Component {
             email: '',
             id: '',
             isLoading: false,
-            loadingMessage: 'Searching...'
+            loadingMessage: 'Searching...',
+            submissionStatus: ''
         }
     }
+
+    submit = () => {
+        confirmAlert({
+            title: 'Confirm to submit',                        // Title dialog
+            message: 'Are you sure to send an email.',               // Message dialog
+
+            confirmLabel: 'Confirm',                           // Text button confirm
+            cancelLabel: 'Cancel',                             // Text button cancel
+            onConfirm: () => this.sellerClick,    // Action after Confirm
+        })
+    };
 
     homeClick = () => {
         this.props.history.push("/home")
@@ -36,13 +50,14 @@ class CourseHub extends Component {
             .then((response) => response.json())
             .then((json) => {
                 this.setState({
-                    email : json
+                    email : json,
+                    submissionStatus: `Email sent to ${this.state.email}`
                 })
-                alert(`Email sent to ${this.state.email}`)
             }).catch((ex) => {
             console.log('parsing failed', ex)
             this.setState({
-                email : ''
+                email : '',
+                submissionStatus : ''
             })
         })
     }
@@ -104,7 +119,8 @@ class CourseHub extends Component {
             isbn : '',
             condition : '',
             price : '',
-            id : ''
+            id : '',
+            submissionStatus: ''
         })
     }
     //Currently not printing multiple books, just the 1st one
@@ -154,8 +170,11 @@ class CourseHub extends Component {
                             <td>{this.state.condition}</td>
                             <td>{this.state.price}</td>
                             <td>
-                                <button onClick={this.sellerClick} id="emailSellerButton1">Email Seller</button>
+                                <button onClick={this.submit} id="emailSellerButton1">Email Seller</button>
                             </td>
+                        </tr>
+                        <tr>
+                            <h3>{this.state.submissionStatus}</h3>
                         </tr>
                         </tbody>
                     </table>

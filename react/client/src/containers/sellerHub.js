@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../style.css';
 import * as Mousetrap from "mousetrap";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 class SellerHub extends Component {
     constructor(props) {
@@ -26,9 +28,21 @@ class SellerHub extends Component {
             email: '',
             postID: '',
             userID: 'jhunt11',
-            teacher: ''
+            teacher: '',
+            submissionStatus: ''
         }
     }
+
+    submit = () => {
+        confirmAlert({
+            title: 'Confirm to submit',                        // Title dialog
+            message: 'Are you sure to delete this post.',               // Message dialog
+
+            confirmLabel: 'Confirm',                           // Text button confirm
+            cancelLabel: 'Cancel',                             // Text button cancel
+            onConfirm: () => this.deleteClick,    // Action after Confirm
+        })
+    };
 
     homeClick = () => {
         this.props.history.push("/home")
@@ -43,7 +57,10 @@ class SellerHub extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`Your post has been saved.`))
+        }).then(
+            this.setState({
+                submissionStatus: `Your post has been saved.`
+            }))
             .catch((ex) => {
             console.log('parsing failed', ex)
         })
@@ -56,7 +73,10 @@ class SellerHub extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).then(alert(`Your post has been deleted.`))
+        }).then(
+            this.setState({
+                submissionStatus: `Your post has been deleted.`
+            }))
             .then(
                 this.setState({
                     courseCode: '',
@@ -158,7 +178,8 @@ class SellerHub extends Component {
             postID: '',
             teacher: '',
             course: '',
-            userID: ''
+            userID: '',
+            submissionStatus: ''
         })
     }
     render() {
@@ -206,11 +227,12 @@ class SellerHub extends Component {
                             </td>
                             {/* will need to be careful later on with people being able to edit the book info or price while there are active requests */}
                             <td>
-                                <button onClick={this.deleteClick} id="removeBookButton1">Remove</button>
+                                <button onClick={this.submit} id="removeBookButton1">Remove</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
+                    <h3>{this.state.submissionStatus}</h3>
                 </div>
                 <br/>
                 <p>NAV LINKS</p>

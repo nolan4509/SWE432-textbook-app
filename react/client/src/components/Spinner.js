@@ -1,5 +1,5 @@
-import React from 'react';
+/*import React from 'react';
 
 const Spinner = () => <div>Searching...</div>
 
-export default Spinner;
+export default Spinner;*/
