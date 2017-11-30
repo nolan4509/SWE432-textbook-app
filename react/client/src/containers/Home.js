@@ -32,11 +32,11 @@ class Home extends Component {
                         </button>
                         <ReactTooltip id='myBooksTip' aria-haspopup='true' border={true} effect='solid' place='bottom'>
                             <font size='3'> This will bring you to your page where you can see all of the current books
-                                you are trying to sell.</font><br/><br/>
+                                you are trying to sell.</font><br/><br/> 
                             <font size='3'> From here, you can update, remove, or add a new book post to sell.</font>
                         </ReactTooltip>
                         <button id="searchCoursesButton" onClick={this.courseHubClick}
-                                data-tip data-for='searchCoursesTip'>
+                        data-tip data-for='searchCoursesTip'>
                             Search Courses
                         </button>
                         <ReactTooltip id='searchCoursesTip' aria-haspopup='true' border={true} effect='solid' place='right'>
@@ -58,7 +58,7 @@ class Home extends Component {
                     </form>
                 </div>*/}
                 <br/>
-
+            
             </div>
 
         );
