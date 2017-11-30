@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../style.css';
+import ReactTooltip from 'react-tooltip';
 
 class Home extends Component {
     constructor(props) {
@@ -24,13 +25,26 @@ class Home extends Component {
                 <title>Home</title>
                 <header>
                     <h1 className="big">Home</h1>
-                    <div id="myBooksButton">
-                        <button onClick={this.sellerHubClick}>
+                    <div>
+                        <button id="myBooksButton" onClick={this.sellerHubClick}
+                        data-tip data-for='myBooksTip'>
                             My Books
                         </button>
-                        <button onClick={this.courseHubClick}>
+                        <ReactTooltip id='myBooksTip' aria-haspopup='true' border={true} effect='solid' place='bottom'>
+                            <font size='3'> This will bring you to your page where you can see all of the current books
+                                you are trying to sell.</font><br/><br/> 
+                            <font size='3'> From here, you can update, remove, or add a new book post to sell.</font>
+                        </ReactTooltip>
+                        <button id="searchCoursesButton" onClick={this.courseHubClick}
+                        data-tip data-for='searchCoursesTip'>
                             Search Courses
                         </button>
+                        <ReactTooltip id='searchCoursesTip' aria-haspopup='true' border={true} effect='solid' place='right'>
+                            <font size='3'> This will bring you to the course hub page, where you can search for whatever course 
+                                you need books for.</font><br/><br/>
+                            <font size='3'> Once you click search, you will see all available books for that course. Then just find the
+                                book you need and click on the email seller button next to it.</font>
+                        </ReactTooltip>
                     </div>
                 </header>
                 <br/>
@@ -44,8 +58,9 @@ class Home extends Component {
                     </form>
                 </div>*/}
                 <br/>
-
+            
             </div>
+
         );
     }
 }

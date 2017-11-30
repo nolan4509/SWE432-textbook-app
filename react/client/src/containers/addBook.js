@@ -260,7 +260,7 @@ class AddBook extends Component {
                                    value={this.state.price} onChange={this.handleChangePrice}
                                    pattern="\d{0,}(\.\d{1,2})"/>
                         </div>
-                        <button id="postBookButton" form="bookInfoForm" type="submit">Post Book</button>
+                        <button id="postBookButton" form="bookInfoForm" type="submit" className="homeButtons">Post Book</button>
                     </form>
                 </div>
                 <div>
