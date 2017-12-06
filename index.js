@@ -186,7 +186,10 @@ app.get('/user/:userID/books', function(req, res){
         res.send("User Not Found.");
         return;
     }
-    let postID = seller.bookPosts[1];
+    let postID = seller.bookPosts[seller.bookPosts.length - 1];
+    console.log(seller);
+    console.log(seller.bookPosts.length);
+    console.log(postID);
     bookPostArray.map(function(post) { //search bookPostArray for matching postID
         if(post.id === postID){
             retPost = post;
@@ -213,6 +216,8 @@ app.delete('/user/books/:postID/remove', function(req, res){
         res.send("Bookpost Not Found.");
         return;
     }
+    let seller = postToDelete.seller;
+    seller.bookPosts.splice(seller.bookPosts.length -1, 1);
 
     bookPostArray.splice(postIndex, 1);
     database.child('Posts/' + `${postID}`).remove();
@@ -286,14 +291,22 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
     let seller = null;
     let bookpost = null;
 
-    fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
+    console.log(userID);
+    console.log(isbnNum);
+    console.log(condition);
+    console.log(teacher);
+    console.log(courseLevel);
+    console.log(courseCode);
+    console.log(price);
+    console.log(postID);
+    /*fetch(`http://isbndb.com/api/v2/json/10AXC8WX/book/${isbnNum}`)//fetch book info
         .then(function (res) {
             return res.json();
         }).then(function (json) {
         let title = json.data[0].title;
         let edition = json.data[0].edition_info;
         let author = json.data[0].author_data[0].name;
-        let textbook = new Textbook(title, isbnNum, title, author, edition);
+        let textbook = new Textbook(title, isbnNum, title, author, edition);*/
         let course = new Course(courseCode, courseLevel, 0);
         userArray.map(function(user) { //search for user account
             if(user.id === userID){
@@ -301,6 +314,7 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             }
         });
         if(seller === null){
+            console.log("user not found")
             res.send("User Not Found.");
             return;
         }
@@ -309,12 +323,19 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
                 bookpost = post;
             }
         });
+        let textbook = bookpost.textbook;
         bookpost = new BookPost(textbook, bookpost.id, condition, seller, teacher, price, course);//store new post
         database.child('Posts/' + `${bookpost.id}`).set(//persist firebase
             { bookpost: bookpost
             });
+        bookPostArray[bookPostArray.length - 1] = bookpost;
+        //updateBookPosts();
+        //updateUsers();
+        console.log(bookpost);
+        console.log("----");
+        console.log(bookPostArray[bookPostArray.length - 1]);
         res.send(bookpost);
-    })
+    /*})
         .catch(function (err) {
             if(err.code === 'ENOTFOUND'){//no internet connection
                 console.log('Internet Error: ' + err);
@@ -326,7 +347,7 @@ app.put('/user/:userID/books/newBook/:isbnNum/:condition/:teacher/:courseCode/:c
             else {//flags 404 and any other client error
                 console.log('Error: ' + err.status + ' --- ' + err.statusText);
             }
-        });
+        });*/
 });
 
 //Both - Create new user account name id email bookpossts

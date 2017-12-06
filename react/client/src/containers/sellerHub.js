@@ -40,7 +40,7 @@ class SellerHub extends Component {
 
             confirmLabel: 'Confirm',                           // Text button confirm
             cancelLabel: 'Cancel',                             // Text button cancel
-            onConfirm: () => this.deleteClick,    // Action after Confirm
+            onConfirm: this.deleteClick    // Action after Confirm
         })
     };
 
