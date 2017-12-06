@@ -221,6 +221,7 @@ app.delete('/user/books/:postID/remove', function(req, res){
 
     bookPostArray.splice(postIndex, 1);
     database.child('Posts/' + `${postID}`).remove();
+    database.child('Users/' + `${seller.id}/userinfo/bookPosts/${seller.bookPosts.length - 1}`).remove();
     res.send("Done");
 });
 
