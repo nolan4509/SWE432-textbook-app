@@ -73,6 +73,7 @@ class Login extends Component {
                 <header>
                     <h1>Sign In</h1>
                 </header>
+                <br></br>
                 <div id="loginForm">
                     <form onSubmit={this.login}>
                         <div>
@@ -91,15 +92,10 @@ class Login extends Component {
                             <input id="password" type="password" placeholder="Enter your password"/>
                         </div>
                         <br/>
-                        <button id="loginButton">Login</button>
+                        <button id="loginButton" className="loginButtons">Sign Up/Login</button>
                     </form>
                     <h3>{this.state.submissionStatus}</h3>
                 </div>
-                <br/>
-                <p>NAV LINKS</p>
-                <nav>
-                    <li><Link to='/home'>Home</Link></li>
-                </nav>
             </div>
         );
     }

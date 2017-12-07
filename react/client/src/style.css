@@ -9,6 +9,10 @@ body {
   padding: 20px;
   border: 20px dashed #ffffff;
 }
+#loginForm{
+  text-align: center;
+  font-size: 130%;
+}
 h1 {
   font-size: 300%;
   color: antiquewhite;
@@ -24,6 +28,19 @@ h1:first-letter{
 }
 .big{
   font-size: 1500%;
+}
+.loginButtons {
+  background-color: #4CAF50;
+  border: 20px #ffffff;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+  transition-duration: 0.4s;
+  margin: 10px;
+  align-items: center;
 }
 .homeButtons {
   background-color: #4CAF50;
