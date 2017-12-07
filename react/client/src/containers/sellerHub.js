@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import '../style.css';
 import * as Mousetrap from "mousetrap";
 import { confirmAlert } from 'react-confirm-alert'; // Import
+import ReactTooltip from 'react-tooltip';
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 class SellerHub extends Component {
@@ -191,17 +192,26 @@ class SellerHub extends Component {
                 <header>
                     <h1>My Books</h1>
                     <div id="topSellerHubButtons">
-                        <button onClick={this.homeClick} id="returnHomeButton" className="homeButtons">Back Home</button>
+                        <button onClick={this.homeClick} id="returnHomeButton" className="homeButtons"
+                                data-tip data-for='backHomeTip'>
+                            Back Home
+                        </button>
+                        <ReactTooltip id='backHomeTip' aria-haspopup='true' border={true} effect='solid' place='bottom'>
+                            <font size='3'> This will bring you back to the home page. In order to search for a course, click
+                                here.</font><br/><br/> 
+                        </ReactTooltip>
+
                         <button onClick={this.addBookClick} id="newBookButton">New Book</button>
                     </div>
                 </header>
                 <div id="pendingBooksTable">
                     <h3>Books I'm Selling:</h3>
                     <div id="userName">
-                        <form onSubmit={this.handleSubmitUser}>
+                        <form id="userSearchForm" onSubmit={this.handleSubmitUser}>
                             <label ><strong>Enter Username: </strong></label>
                             <input id="courseSearch" type="text" placeholder="ex. jhunt11"
                                    value={this.state.userID} onChange={this.handleChangeUser}/>
+                            <button form="userSearchForm" type="submit">Search</button>
                         </form>
                         <h4>Hello, {this.state.userID}</h4>
                     </div>
