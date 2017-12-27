@@ -4,7 +4,7 @@ import '../style.css';
 import * as Mousetrap from "mousetrap";
 
 class AddBook extends Component {
-    constructor(props) {
+    constructor(props) {//new comment
         super(props)
         //this.handleSubmitBook = this.handleSubmitBook.bind(this)
         this.handleIsbnLookup = this.handleIsbnLookup.bind(this)
